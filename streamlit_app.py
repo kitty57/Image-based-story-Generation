@@ -48,7 +48,7 @@ def main():
                 content=[
                     {"type": "text",
                      "text": "Create a cohesive story that links the provided sequence of images together. Utilize the context of each image to generate text that seamlessly connects them into a coherent narrative."
-                    }
+                    },
                     {"type": "image_url",
                       "image_url": images[0]},
                     {"type": "image_url",
