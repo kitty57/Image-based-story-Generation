@@ -48,7 +48,7 @@ def main():
     st.image(images, caption=[f"Image {i+1}" for i in range(len(images))], width=200)
 
     # Initialize Language Model
-    llm = ChatGoogleGenerativeAI(model="gemini-pro-vision", google_api_key='llm = ChatGoogleGenerativeAI(model="gemini-pro-vision",google_api_key='AIzaSyDlBFVsmV8pao6Ax-bcR0dc5h4CusiNCsc')
+    llm = ChatGoogleGenerativeAI(model="gemini-pro-vision", google_api_key='AIzaSyDlBFVsmV8pao6Ax-bcR0dc5h4CusiNCsc')
 ')
 
     # Generate story button
