@@ -49,7 +49,6 @@ def main():
 
     # Initialize Language Model
     llm = ChatGoogleGenerativeAI(model="gemini-pro-vision", google_api_key='AIzaSyDlBFVsmV8pao6Ax-bcR0dc5h4CusiNCsc')
-')
 
     # Generate story button
     if st.button("Generate Story") and images:
