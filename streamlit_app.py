@@ -21,8 +21,12 @@ def main():
 
     # Input fields based on user choice
     if input_option == "Upload Images":
-        images = st.file_uploader("Upload Image(s):", accept_multiple_files=True, type=["jpg", "jpeg", "png"])
+        uploaded_images = st.file_uploader("Upload Image(s):", accept_multiple_files=True, type=["jpg", "jpeg", "png"])
         image_urls = [None] * 4
+        images = []
+        if uploaded_images:
+            for uploaded_image in uploaded_images:
+                uploaded_files.append(uploaded_image)
     else:
         st.markdown("Enter the URLs of the images:")
         image_urls = []
