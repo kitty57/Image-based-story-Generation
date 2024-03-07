@@ -10,6 +10,22 @@ import textwrap
 def generate_story(llm, hmessage):
     msg = llm.invoke([hmessage])
     return to_markdown(msg.content)
+def get_image_url(uploaded_image):
+    # Convert uploaded image to URL
+    image_url = None
+    if uploaded_image is not None:
+        img_data = uploaded_image.read()
+        img_bytes = BytesIO(img_data)
+        img = Image.open(img_bytes)
+        image_url = save_image_to_tempfile(img)
+    return image_url
+
+def save_image_to_tempfile(image):
+    # Save image to temporary file and return URL
+    with BytesIO() as output:
+        image.save(output, format="JPEG")
+        data = output.getvalue()
+    return f"data:image/jpeg;base64,{base64.b64encode(data).decode()}"
 
 def main():
     # Set up Streamlit layout
@@ -26,15 +42,15 @@ def main():
         images = []
         if uploaded_images:
             for uploaded_image in uploaded_images:
-                images.append(uploaded_image)
+                image_url = get_image_url(uploaded_image)
+                images.append(image_url)
+
     else:
         st.markdown("Enter the URLs of the images:")
         image_urls = []
         for i in range(4):
             image_url = st.text_input(f"Image {i+1} URL:")
             image_urls.append(image_url)
-
-        images = []
         for image_url in image_urls:
             if image_url:
                 response = requests.get(image_url)
