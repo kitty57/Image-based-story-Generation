@@ -11,7 +11,7 @@ def to_markdown(text):
     text = text.replace('•', '  *')
     return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
 
-def generate_story(llm, hmessage):
+def generate_story(llm, hmessage,images):
     msg = llm.invoke([hmessage])
     return to_markdown(msg.content)
 
@@ -49,10 +49,18 @@ def main():
                     {"type": "text",
                      "text": "Create a cohesive story that links the provided sequence of images together. Utilize the context of each image to generate text that seamlessly connects them into a coherent narrative."
                     }
+                    {"type": "image_url",
+                      "image_url": images[0]},
+                    {"type": "image_url",
+                     "image_url": images[1]},
+                    {"type": "image_url",
+                      "image_url": images[2]},
+                    {"type": "image_url",
+                      "image_url": images[3]},
                 ]
             )
 
-            story = generate_story(llm, hmessage)
+            story = generate_story(llm, hmessage,images)
             st.markdown(story)
 
 if __name__ == "__main__":
