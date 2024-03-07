@@ -14,7 +14,7 @@ def to_markdown(text):
     
 def generate_story(llm, hmessage):
     msg = llm.invoke([hmessage])
-    return msg.content[0]
+    return msg.content
 
 def main():
     st.title("Image-Based Storytelling with Language Model")
