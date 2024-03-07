@@ -11,16 +11,21 @@ def to_markdown(text):
     text = text.replace('•', '  *')
     return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
 
-def generate_story(llm, hmessage,images):
+def generate_story(llm, hmessage):
     msg = llm.invoke([hmessage])
     return to_markdown(msg.content)
 
 def main():
+    # Set up Streamlit layout
+    st.title("Image-Based Storytelling with Language Model")
+    st.markdown("Choose how you want to input images:")
+
+    # User input option
     input_option = st.radio("Input Option:", ("Upload Images", "Enter Image URLs"))
 
     # Input fields based on user choice
     if input_option == "Upload Images":
-        uploaded_images = st.file_uploader("Upload Image(s):", accept_multiple_files=True, type=["jpg", "jpeg", "png"])
+        images = st.file_uploader("Upload Image(s):", accept_multiple_files=True, type=["jpg", "jpeg", "png"])
         image_urls = [None] * 4
     else:
         st.markdown("Enter the URLs of the images:")
@@ -29,7 +34,6 @@ def main():
             image_url = st.text_input(f"Image {i+1} URL:")
             image_urls.append(image_url)
 
-    # Display images if URLs are provided
     images = []
     for image_url in image_urls:
         if image_url:
@@ -41,12 +45,11 @@ def main():
             else:
                 st.error(f"Failed to fetch image from URL: {image_url}")
 
-    # Display images in parallel
     if images:
         st.image(images, caption=[f"Image {i+1}" for i in range(len(images))], width=200)
 
         # Initialize Language Model
-        llm = ChatGoogleGenerativeAI(model="gemini-pro-vision", google_api_key='YOUR_GOOGLE_API_KEY')
+        llm = ChatGoogleGenerativeAI(model="gemini-pro-vision", google_api_key='AIzaSyDlBFVsmV8pao6Ax-bcR0dc5h4CusiNCsc')
 
         # Generate story button
         if st.button("Generate Story"):
@@ -57,20 +60,22 @@ def main():
                      "text": "Create a cohesive story that links the provided sequence of images together. Utilize the context of each image to generate text that seamlessly connects them into a coherent narrative."
                     },
                     {"type": "image_url",
-                      "image_url": images[0]},
+                     "image_url": images[0]},
                     {"type": "image_url",
-                     "image_url": images[1]},
+                      "image_url": images[1]},
                     {"type": "image_url",
-                      "image_url": images[2]},
+                     "image_url": images[2]},
                     {"type": "image_url",
-                      "image_url": images[3]},
+                     "image_url": images[3]},
                 ]
             )
 
-            # Generate and display story
-            story = generate_story(llm, hmessage)
-            st.markdown(story)
+            # Generate and display story inside a box
+            with st.expander("Generated Story"):
+                story = generate_story(llm, hmessage)
+                st.markdown(story)
 
 if __name__ == "__main__":
     main()
+
 
