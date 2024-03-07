@@ -7,10 +7,6 @@ from langchain_core.messages import HumanMessage
 from IPython.display import Markdown
 import textwrap
 
-def to_markdown(text):
-    text = text.replace('•', '  *')
-    return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
-
 def generate_story(llm, hmessage):
     msg = llm.invoke([hmessage])
     return to_markdown(msg.content)
@@ -45,35 +41,31 @@ def main():
             else:
                 st.error(f"Failed to fetch image from URL: {image_url}")
 
-    if images:
-        st.image(images, caption=[f"Image {i+1}" for i in range(len(images))], width=200)
+    st.image(images, caption=[f"Image {i+1}" for i in range(len(images))], width=200)
 
         # Initialize Language Model
-        llm = ChatGoogleGenerativeAI(model="gemini-pro-vision", google_api_key='AIzaSyDlBFVsmV8pao6Ax-bcR0dc5h4CusiNCsc')
+    llm = ChatGoogleGenerativeAI(model="gemini-pro-vision", google_api_key='AIzaSyDlBFVsmV8pao6Ax-bcR0dc5h4CusiNCsc')
 
         # Generate story button
-        if st.button("Generate Story"):
-            # Create HumanMessage with image URLs
-            hmessage = HumanMessage(
-                content=[
-                    {"type": "text",
-                     "text": "Create a cohesive story that links the provided sequence of images together. Utilize the context of each image to generate text that seamlessly connects them into a coherent narrative."
-                    },
-                    {"type": "image_url",
-                     "image_url": images[0]},
-                    {"type": "image_url",
-                      "image_url": images[1]},
-                    {"type": "image_url",
-                     "image_url": images[2]},
-                    {"type": "image_url",
-                     "image_url": images[3]},
-                ]
-            )
-
-            # Generate and display story inside a box
-            with st.expander("Generated Story"):
-                story = generate_story(llm, hmessage)
-                st.markdown(story)
+    if st.button("Generate Story"):
+        hmessage = HumanMessage(
+            content=[
+                {"type": "text",
+                 "text": "Create a cohesive story that links the provided sequence of images together. Utilize the context of each image to generate text that seamlessly connects them into a coherent narrative."
+                },
+                {"type": "image_url",
+                "image_url": images[0]},
+                {"type": "image_url",
+                "image_url": images[1]},
+                {"type": "image_url",
+                "image_url": images[2]},
+                {"type": "image_url",
+                "image_url": images[3]},
+            ]
+        )
+        with st.expander("Generated Story"):
+            story = generate_story(llm, hmessage)
+            st.markdown(story)
 
 if __name__ == "__main__":
     main()
