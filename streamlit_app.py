@@ -16,15 +16,18 @@ def generate_story(llm, hmessage,images):
     return to_markdown(msg.content)
 
 def main():
-    # Set up Streamlit layout
-    st.title("Image-Based Storytelling with Language Model")
-    st.markdown("Upload or paste image URLs to generate a cohesive story.")
+    input_option = st.radio("Input Option:", ("Upload Images", "Enter Image URLs"))
 
-    # Input fields for image URLs
-    image_urls = []
-    for i in range(4):
-        image_url = st.text_input(f"Image {i+1} URL:")
-        image_urls.append(image_url)
+    # Input fields based on user choice
+    if input_option == "Upload Images":
+        uploaded_images = st.file_uploader("Upload Image(s):", accept_multiple_files=True, type=["jpg", "jpeg", "png"])
+        image_urls = [None] * 4
+    else:
+        st.markdown("Enter the URLs of the images:")
+        image_urls = []
+        for i in range(4):
+            image_url = st.text_input(f"Image {i+1} URL:")
+            image_urls.append(image_url)
 
     # Display images if URLs are provided
     images = []
@@ -41,9 +44,13 @@ def main():
     # Display images in parallel
     if images:
         st.image(images, caption=[f"Image {i+1}" for i in range(len(images))], width=200)
-        llm = ChatGoogleGenerativeAI(model="gemini-pro-vision", google_api_key='AIzaSyDlBFVsmV8pao6Ax-bcR0dc5h4CusiNCsc')
 
+        # Initialize Language Model
+        llm = ChatGoogleGenerativeAI(model="gemini-pro-vision", google_api_key='YOUR_GOOGLE_API_KEY')
+
+        # Generate story button
         if st.button("Generate Story"):
+            # Create HumanMessage with image URLs
             hmessage = HumanMessage(
                 content=[
                     {"type": "text",
@@ -60,7 +67,8 @@ def main():
                 ]
             )
 
-            story = generate_story(llm, hmessage,images)
+            # Generate and display story
+            story = generate_story(llm, hmessage)
             st.markdown(story)
 
 if __name__ == "__main__":
