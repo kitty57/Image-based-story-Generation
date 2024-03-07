@@ -8,6 +8,10 @@ from IPython.display import Markdown
 import textwrap
 import base64
 
+def to_markdown(text):
+  text = text.replace('•', '  *')
+  return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
+    
 def generate_story(llm, hmessage):
     msg = llm.invoke([hmessage])
     return to_markdown(msg.content)
