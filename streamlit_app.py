@@ -68,10 +68,9 @@ def main():
                 image.save(image_data, format="JPEG")
                 image_url = f"data:image/jpeg;base64,{base64.b64encode(image_data.getvalue()).decode()}"
                 hmessage.content.append({"type": "image_url", "image_url": image_url})
-            
-             generated_story = generate_story(llm, hmessage)
-             with st.expander("Generated Story", expanded=True):
-               st.write(generated_story)
+            generated_story = generate_story(llm, hmessage)
+            with st.expander("Generated Story", expanded=True):
+              st.write(generated_story)
 
 if __name__ == "__main__":
     main()
