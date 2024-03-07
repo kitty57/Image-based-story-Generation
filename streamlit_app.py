@@ -6,6 +6,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
 from IPython.display import Markdown
 import textwrap
+import base64
 
 def generate_story(llm, hmessage):
     msg = llm.invoke([hmessage])
